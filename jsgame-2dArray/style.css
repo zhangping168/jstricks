@@ -1,0 +1,19 @@
+#stage{
+	position:relative;
+	width:384px;
+	height:384px;
+	background-image:url('./img/background.png');
+}
+
+cell{
+	display: block;
+	width:64px;
+	height:64px;
+	position: absolute;
+}
+
+p{
+	width:400px;
+	margin-top:2em;
+	font-weight: bold;
+}

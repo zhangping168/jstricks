@@ -1,0 +1,57 @@
+#stage{
+	width:300px;
+	height:33px;
+	position: relative;
+}
+
+#scale{
+	width: 300px;
+	height: 33px;
+	position: absolute;
+	top:0;
+	left:0;
+	background:url(./img/scale.png);
+}
+#arrow{
+	width:17px;
+	height: 22px;
+	position: absolute;
+	top:0;
+	left:0;
+	background:url(./img/arrow.png);
+
+	-webkit-transition:left 0.5s ease-out 0s;
+	transition:left 0.5s ease-out 0s;
+}
+
+#guessBtn{
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:14px;
+	
+	border:2px solid #000;
+	color:#fff;
+	font-weight: bold;
+	padding:10px 20px;
+	border-radius:10px;
+	cursor:pointer;
+
+	background:-webkit-linear-gradient(300deg, #a3a3a3,#000);
+	background:linear-gradient(300deg, #a3a3a3,#000);
+
+	-webkit-box-shadow:2px 2px 3px rgba(0,0,0,0.5);
+	box-shadow:2px 2px 3px rgba(0,0,0,0.5);
+
+	user-select:none;
+	-webkit-user-select:none;
+	outline:none;
+	
+}
+	#guessBtn:hover{
+		background:linear-gradient(top,#acc7a3,#506651);
+		background:-webkit-linear-gradient(top,#acc7a3,#506651);
+	}
+	#guessBtn:active{
+		background:linear-gradient(top,#858565,#c5c9a9);
+		background:-webkit-linear-gradient(top,#858565,#c5c9a9);
+		
+	}
