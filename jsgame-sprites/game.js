@@ -277,20 +277,26 @@ function update(){
 	cat.y+=cat.vy;
 
 	//stop the sprite at the canvas edge
-	if(cat.x<0){
-		cat.x=0;
-	}
-	if(cat.y<0){
-		cat.y=0;
-	}
+	//Block at canvas edge
+	/*
+	cat.x=Math.max(0,Math.min(cat.x+cat.vx,canvas.width-cat.width));
+	cat.y=Math.max(0,Math.min(cat.y+cat.vx,canvas.height-cat.height));
+	*/
 
-	if((cat.x+cat.width)>canvas.width){
-		cat.x = canvas.width-cat.width;
+	//screen wrapping
+	if(cat.x>canvas.width){
+		cat.x=0-cat.width;
 	}
-
-	if((cat.y+cat.height)>canvas.height){
-		cat.y = canvas.height-cat.height;
+	if((cat.x+cat.width)<0){
+		cat.x=canvas.width;
 	}
+	if(cat.y>canvas.height){
+		cat.y=0-cat.height;
+	}
+	if((cat.y+cat.height)<0){
+		cat.y=canvas.height;
+	}
+	
 	render();
 }
 
