@@ -1,165 +1,136 @@
 var spriteObject={
-	sourceX:0,sourceY:0,sourceWidth:64,sourceHeight:64,
-	x:0,y:0,width:64,height:64,
+	sourceX:0,
+	sourceY:0,
+	sourceWidth:64,
+	sourceHeight:64,
 
-	centerX:function(){
-		return this.x+this.width/2;
-	},
-	centerY:function(){
-		return this.y+this.height/2;
-	},
-};
+	x:0,
+	y:0,
+	width:64,
+	height:64
+}
 
+
+var sprites=[],message='',score=0,collisionHasOccured=false;
+
+//create html5 canvas
 var canvas = document.querySelector('canvas');
 var drawingSurface = canvas.getContext('2d');
-var sprites = [];
-var message='No collision...';
-drawingSurface.font='normal 16px Arial';
-drawingSurface.fillStyle='#f00';
-drawingSurface.textAlign='center';
+
+var cat = Object.create(spriteObject);
+cat.x = 0;
+cat.y = 0;
+sprites.push(cat);
+
+var monster = Object.create(spriteObject);
+
+monster.x = canvas.width/2;
+monster.y=canvas.height/2;
+//monster state
+monster.NORMAL = [1,0];
+monster.SCARED = [0,1];
+monster.state = monster.NORMAL;
+monster.update = function(){
+	this.sourceX = this.state[0] * this.sourceWidth;
+	this.sourceY = this.state[1] * this.sourceHeight;
+
+
+};
+sprites.push(monster);
+
+var outterMeter = Object.create(spriteObject);
+outterMeter.sourceY=128;
+outterMeter.sourceWidth=128;
+outterMeter.sourceHeight=14;
+outterMeter.x = monster.x-32;
+outterMeter.y = monster.y-32;
+outterMeter.width=128;
+outterMeter.height=14; 
+
+
+
+var innerMeter = Object.create(spriteObject);
+innerMeter.sourceY=142;
+innerMeter.sourceWidth=128;
+innerMeter.sourceHeight=14;
+innerMeter.x = outterMeter.x;
+innerMeter.y = outterMeter.y;
+innerMeter.width=128;
+innerMeter.height=14; 
+
+sprites.push(innerMeter);
+sprites.push(outterMeter);
+
 
 var image = new Image();
 
 image.addEventListener('load',loadHandler,false);
-image.src='img/circles.png';
+image.src='img/collisionTileSheet.png'; //load image
 
 function loadHandler(){
-	
 	update();
 }
 
-function moveCircle(moveSprite){
-	if(moveLeft && !moveRight){
-				moveSprite.x-=speed;
-			}
-			if(moveRight && !moveLeft){
-				moveSprite.x+=speed;
-			}
-
-			if(moveUp && !moveDown){
-				moveSprite.y-=speed;
-			}
-
-			if(moveDown && !moveUp){
-				moveSprite.y+=speed;
-			}
-}
 function update(){
 	window.requestAnimationFrame(update,canvas);
-	moveCircle(redCircle);
-	render();	
-}
 
-var redCircle = Object.create(spriteObject);
+	if(hitTestRectangle(cat,monster)){//collision
+		monster.state = monster.SCARED;
+		if(innerMeter.width>0){ //reduce monster health bar value
+			innerMeter.width--;
+			innerMeter.sourceWidth--;
 
-sprites.push(redCircle);
+			if(innerMeter.width<1){
+				message = 'Game Over!';
+			}
+		}
 
-var blueCircle = Object.create(spriteObject);
-blueCircle.sourceX=64;
-blueCircle.x=128;
-sprites.push(blueCircle);
-
-var vx=0,vy=0,magnitude=0,totalRadius=0,speed=5,moveLeft=false,moveRight=false,moveUp=false,moveDown=false,arrowLeft=37,arrowUp=38,arrowRight=39,arrowDown=40;
-
-function hitTestCircle(circleOne, circleTwo){
-	vx = Math.abs(circleOne.centerX()-circleTwo.centerX());
-	vy = Math.abs(circleOne.centerY()-circleTwo.centerY());
-
-	magnitude = Math.sqrt(vx*vx+vy*vy);
-	totalRadius = circleOne.width/2+circleTwo.width/2;
-
-	var hit = magnitude < totalRadius;
-
-	return hit;
-}
-
-window.addEventListener('keydown',keydownHandler,false);
-
-function keydownHandler(event){
-	var action = event.keyCode;
-	switch(action){
-		case arrowLeft:
-			moveLeft=true;
-			break;
-		case arrowRight:
-			moveRight=true;
-			break;
-		case arrowUp:
-			moveUp=true;
-			break;
-		case arrowDown:
-			moveDown=true;
-			break;
+	}else{
+		//no collision
+		monster.state = monster.NORMAL;
 	}
-}
 
-window.addEventListener('keyup',keyupHandler,false);
+	monster.update();
 
-function keyupHandler(event){
-	var action = event.keyCode;
-	switch(action){
-		case arrowLeft:
-			moveLeft=false;
-			break;
-		case arrowRight:
-			moveRight=false;
-			break;
-		case arrowUp:
-			moveUp=false;
-			break;
-		case arrowDown:
-			moveDown=false;
-			break;
-	}
+	render();
 }
 
 function render(){
-
-	//clear canvas before drawing
+	//clear the canvas before drawing
 	drawingSurface.clearRect(0,0,canvas.width,canvas.height);
 
 	if(sprites.length){
+
 		for(var i=0;i<sprites.length;i++){
 			var sprite = sprites[i];
 
 			drawingSurface.drawImage(
-				image,
-				sprite.sourceX,sprite.sourceY,sprite.sourceWidth,sprite.sourceHeight,
-				Math.floor(sprite.x),Math.floor(sprite.y),
-				sprite.width,sprite.height);
-
-		}
-	}
-	if(hitTestCircle(blueCircle,redCircle)){
-		message = 'Collision!';
-		blockOverLapping(redCircle,blueCircle);
-	}else{
-		message = 'No collision...';
-	}
-	drawingSurface.fillText(message,canvas.width/2,canvas.height/2);
+					image,
+					sprite.sourceX,sprite.sourceY,
+					sprite.sourceWidth,sprite.sourceHeight,
+					Math.floor(sprite.x),Math.floor(sprite.y),
+					sprite.width,sprite.height
+				);
+		}//end of for loop
+	}//end of if condition
 
 }
 
-function blockOverLapping(c1,c2){
-		var vx = Math.abs(c1.x-c2.x);
-		var vy = Math.abs(c1.y-c2.y);
+//check collision
+function hitTestRectangle(cat,monster){
+	var hit = false;
 
-		var magnitude = Math.sqrt(vx*vx+vy*vy);
-		var totalRadius = c1.width/2+c2.width/2;
+	return hit;
+}
 
-		if(magnitude>totalRadius){
-			//no collision
-		}else{
-			//collision
-			var overlapSpacing = totalRadius - magnitude;
-			
-			//Reposition the vetcor
-			dx = vx/magnitude;
-			dy = vy/magnitude;
+//keyboard movement
+window.addEventListener('keydown',keydownHandler,false);
+window.addEventListener('keyup',keyupHandler,false);
 
-			//move circle1 out of collision
-			c1.x+=overlapSpacing*dx;
-			c1.y+=overlapSpacing*dy;
-		}
+function keydownHandler(event){
 
-	}
+}
+
+function keyupHandler(event){
+	
+}
