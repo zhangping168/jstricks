@@ -11,11 +11,13 @@ var spriteObject={
 }
 
 
-var sprites=[],message='',score=0,collisionHasOccured=false;
+var sprites=[],message='',score=0,collisionHasOccured=false,speed=5;
 
 //create html5 canvas
 var canvas = document.querySelector('canvas');
 var drawingSurface = canvas.getContext('2d');
+drawingSurface.font='normal 18px Arial';
+drawingSurface.fillStyle='#000';
 
 var cat = Object.create(spriteObject);
 cat.x = 0;
@@ -82,12 +84,24 @@ function update(){
 
 			if(innerMeter.width<1){
 				message = 'Game Over!';
+
 			}
 		}
 
 	}else{
 		//no collision
 		monster.state = monster.NORMAL;
+	}
+
+	if(moveLeft && !moveRight){
+		//move to left
+		cat.x-=speed;
+	}else if(moveRight && !moveLeft){
+		cat.x+=speed;
+	}else if(moveUp&&!moveDown){
+		cat.y-=speed;
+	}else if(moveDown&&!moveUp){
+		cat.y+=speed;
 	}
 
 	monster.update();
@@ -112,13 +126,30 @@ function render(){
 					sprite.width,sprite.height
 				);
 		}//end of for loop
+
 	}//end of if condition
+
+	drawingSurface.fillText(message,innerMeter.x+10,innerMeter.y-5);
 
 }
 
 //check collision
 function hitTestRectangle(cat,monster){
 	var hit = false;
+	var vx = Math.abs(cat.x - monster.x);
+	var vy = Math.abs(cat.y - monster.y)
+	var halfWidth = Math.floor(cat.width/2 + monster.width/2);
+	var halfHeight = Math.floor(cat.height/2 + monster.height/2);
+
+	if(vx<halfWidth && vy<halfHeight){
+		//two objects collapse
+		hit = true;
+		
+	}else{
+		hit = false;
+	
+	}
+
 
 	return hit;
 }
@@ -127,10 +158,42 @@ function hitTestRectangle(cat,monster){
 window.addEventListener('keydown',keydownHandler,false);
 window.addEventListener('keyup',keyupHandler,false);
 
+var arrowLeft=37,arrowUp=38,arrowRight=39,arrowDown=40;
+var moveLeft=false,moveUp=false,moveRight=false,moveDown=false;
 function keydownHandler(event){
+	var keycode = event.keyCode;
 
+	switch(keycode){
+		case arrowLeft:
+			moveLeft=true;
+			break;
+		case arrowUp:
+			moveUp=true;
+			break;
+		case arrowRight:
+			moveRight=true;
+			break;
+		case arrowDown:
+			moveDown=true;
+			break;
+	}
 }
 
 function keyupHandler(event){
-	
+	var keycode = event.keyCode;
+
+	switch(keycode){
+		case arrowLeft:
+			moveLeft=false;
+			break;
+		case arrowUp:
+			moveUp=false;
+			break;
+		case arrowRight:
+			moveRight=false;
+			break;
+		case arrowDown:
+			moveDown=false;
+			break;
+	}
 }
