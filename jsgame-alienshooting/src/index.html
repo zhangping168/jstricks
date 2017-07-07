@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta chartset="utf-8">
+        <title>JavaScript Game - Sprites</title>
+        <!-- Stylesheet -->
+        <link rel="Stylesheet" href="../src/style.css">
+       
+    </head>
+    <body>
+    <!-- The sounds -->
+    <audio id="music">
+        <source type="audio/mpeg" src="../sounds/music.mp3" loop>
+        <source type="audio/ogg" src="../sounds/music.ogg" loop>
+    </audio>
+
+    <audio id="shootSound">
+        <source src="../sounds/shoot.mp3" type="audio/mpeg" loop>
+        <source src="../sounds/shoot.ogg" type="audio/ogg" loop>
+    </audio>
+    
+    <audio id="explosionSound">
+        <source src="../sounds/explosion.mp3" type="audio/mpeg" loop>
+        <source src="../sounds/explosion.ogg" type="audio/ogg" loop>
+    </audio>
+    <canvas width="480" height="320" style="border:1px dashed black"></canvas>  
+
+    <script src='../src/requestAnimationFramePolyfill.js'></script>
+    <script src='../src/objects.js'></script>
+    <script src='../src/collision.js'></script>
+    <script src='../src/game.js'></script>
+    </body>
+</html>
