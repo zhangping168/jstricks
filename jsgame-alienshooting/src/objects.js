@@ -8,5 +8,12 @@ var spriteObject = {
 	y:0,
 	width:32,
 	height:32,
-	visible:true
+	visible:true,
+	centerX: function(){
+		return Math.floor(this.x+this.width/2);
+	},
+
+	halfWidth :function(){
+		return Math.floor(this.width/2);
+	}
 }

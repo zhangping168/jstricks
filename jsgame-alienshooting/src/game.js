@@ -7,7 +7,7 @@
 	var drawingSurface = canvas.getContext('2d');
 
 	//create game object arrays
-	var sprites=[],assetsToLoad=[],assetsLoaded=0;
+	var sprites=[],missiles=[],assetsToLoad=[],assetsLoaded=0;
 	var gameLoading=0,gamePlaying=1,gameOver=2,gameState = gameLoading;
 	
 	//create background object
@@ -26,6 +26,8 @@
 	cannon.sourceHeight=32;
 	cannon.x = canvas.width/2-cannon.width;
 	cannon.y = 280;
+	
+
 	sprites.push(cannon);
 
 	//create image assets
@@ -92,7 +94,7 @@
 
 	//keyboard event for cannon object
 
-	var arrowLeft=37, arrowRight=39, moveLeft=false,moveRight=false;
+	var arrowLeft=37, arrowRight=39, moveLeft=false,moveRight=false,spaceKey=32,spaceKeyIsDown=false,shoot=false;
 
 	window.addEventListener('keydown',keydownHandler,false);
 	window.addEventListener('keyup',keyupHandler,false);
@@ -107,6 +109,13 @@
 				moveRight = true;
 				
 				break;
+			case spaceKey:
+				if(!spaceKeyIsDown){
+					spaceKeyIsDown = true;
+					shoot=true;	
+				}
+				
+				break;
 
 		}
 	}
@@ -117,6 +126,9 @@
 				break;
 			case arrowRight:
 				moveRight = false;
+				break;
+			case spaceKey:
+				spaceKeyIsDown=false;
 				break;
 
 		}
@@ -141,14 +153,72 @@
 			cannon.vx=0;
 		}
 
+		//cannon fire missiles
+		if(shoot){
+			fireMissile();
+			shoot=false;//Prevent more than one shot being fired
+		}
 		//update cannon movements
 
 		cannon.x= Math.max(0,Math.min(cannon.x+cannon.vx,canvas.width-cannon.width));
+
+		//move the missile
+		for(var i=0;i<missiles.length;i++){
+			var missile = missiles[i];
+
+			//move missile up the screen
+			missile.y += missile.vy;
+
+			//remove missile if out of top screen
+			if(missile.y < 0-missile.height){
+				//remove missile from missiles array
+				removeObject(missile,missiles);
+				//remove missile from sprites array
+				removeObject(missile,sprites);
+				i--;//reduce the loop counter by one to compensate for the removed element
+			}
+
+		}
+
+
 
 	}
 
 	function gameOver(){
 		
+	}
+
+	function fireMissile(){
+		//create a missile sprite
+		var missile = Object.create(spriteObject);
+		missile.sourceX=96;
+		missile.sourceWidth=16;
+		missile.sourceHeight=16;
+		missile.width=16;
+		missile.height=16;
+
+		//center missile over cannon
+		missile.x=cannon.centerX()-missile.halfWidth();
+		missile.y=cannon.y-missile.height;
+
+		//set missile speed
+		missile.vy=-8;//missile moves from bottom to top
+
+		//put missile into sprites and missiles array
+		sprites.push(missile);
+		missiles.push(missile);
+
+
+	}
+
+	//remove object function
+	function removeObject(elementToRemove,array){
+		var i = array.indexOf(elementToRemove);
+		if(i!==-1){ //element exists in array
+			array.slice(i,1);
+		}
+
+		console.log('object removed');
 	}
 
 }());
