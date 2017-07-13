@@ -170,7 +170,7 @@
 			missile.y += missile.vy;
 
 			//remove missile if out of top screen
-			if(missile.y < 0-missile.height){
+			 if(missile.y < 0 - missile.height){
 				//remove missile from missiles array
 				removeObject(missile,missiles);
 				//remove missile from sprites array
@@ -215,7 +215,7 @@
 	function removeObject(elementToRemove,array){
 		var i = array.indexOf(elementToRemove);
 		if(i!==-1){ //element exists in array
-			array.slice(i,1);
+			array.splice(i,1);
 		}
 
 		console.log('object removed');
