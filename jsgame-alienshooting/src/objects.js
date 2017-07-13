@@ -16,4 +16,12 @@ var spriteObject = {
 	halfWidth :function(){
 		return Math.floor(this.width/2);
 	}
+};
+
+var alienObject = Object.create(spriteObject);
+alienObject.NORMAL=1;
+alienObject.EXPLODED=2;
+alienObject.state=alienObject.NORMAL;
+alienObject.update = function(){
+	this.sourceX=this.state*this.width;
 }

@@ -7,8 +7,9 @@
 	var drawingSurface = canvas.getContext('2d');
 
 	//create game object arrays
-	var sprites=[],missiles=[],assetsToLoad=[],assetsLoaded=0;
+	var sprites=[],missiles=[],aliens=[],assetsToLoad=[],assetsLoaded=0;
 	var gameLoading=0,gamePlaying=1,gameOver=2,gameState = gameLoading;
+	var alienFrequency=100,alienTimer=0;
 	
 	//create background object
 	var background = Object.create(spriteObject);
@@ -64,7 +65,7 @@
 				break;
 
 			case gameOver:
-				gameOver();
+				endGame();
 				break;
 		}
 
@@ -180,12 +181,42 @@
 
 		}
 
+		//Add one to the alienTimer
+		alienTimer++;
+
+		//make a new alien if alienTimer equals alienFrequency
+		if(alienTimer==alienFrequency){
+			makeAlien();
+			alienTimer=0;//reset alienTimer
+
+			//Reduce the alienFrequency by one to gradually increase the frequency that aliens are created
+			//aliens will appear faster by time
+			if(alienFrequency>2){
+				alienFrequency--;
+			}
+
+		}
+
+		//move aliens
+		for(var i=0;i<aliens.length;i++){
+			var alien=aliens[i];
+			if(alien.state=alien.NORMAL){
+				//move current alien if its state is normal
+				alien.y+=alien.vy;
+
+			}
+			//check if the alien has crossed the bottom of the screen
+			if(alien.y > canvas.height+alien.height){
+				//End game if an alien reached earth
+				gameState= gameOver;
+			}
+		}
 
 
 	}
 
-	function gameOver(){
-		
+	function endGame(){
+		console.log('game over');
 	}
 
 	function fireMissile(){
@@ -220,5 +251,29 @@
 
 		console.log('object removed');
 	}
+
+	//make alien function
+	function makeAlien(){
+
+		//create the alien
+		var alien = Object.create(alienObject);
+		alien.sourceX=32;
+
+
+		//set its Y position above the top screen boundary
+		alien.y=0-alien.height;
+
+		//asign the alien random X position
+		var randomPosition = Math.floor(Math.random()*15);
+		alien.x=randomPosition*alien.width;
+
+		//set its speed
+		alien.vy=1;
+
+		//push the alien to sprites and aliens array
+		sprites.push(alien);
+		aliens.push(alien);
+	}
+
 
 }());
