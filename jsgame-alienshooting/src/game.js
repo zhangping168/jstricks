@@ -10,6 +10,7 @@
 	var sprites=[],missiles=[],aliens=[],assetsToLoad=[],assetsLoaded=0;
 	var gameLoading=0,gamePlaying=1,gameOver=2,gameState = gameLoading;
 	var alienFrequency=100,alienTimer=0;
+	var score=0,scoreNeededToWin=60;
 	
 	//create background object
 	var background = Object.create(spriteObject);
@@ -212,6 +213,27 @@
 			}
 		}
 
+		//check if alien has collision with missile
+		for(var i=0;i<aliens.length;i++){
+
+			var alien = aliens[i];
+			for(var j=0;j<aliens.length;j++){
+				var missile = missiles[i];
+				if(missile && alien && hitTestRectangle(alien,missile) && alien.state === alien.NORMAL){
+
+					//missile hit alien and destory it
+					destoryAlien(alien);
+					score++;
+
+					//remove missile
+					removeObject(missile,missiles);
+					removeObject(missile,sprites);
+
+					//Subtract 1 from the loop counter to compensate for the removed missile
+					j--;			}
+			}
+		}
+
 
 	}
 
@@ -273,6 +295,21 @@
 		//push the alien to sprites and aliens array
 		sprites.push(alien);
 		aliens.push(alien);
+	}
+
+	//destory alien function
+	function destoryAlien(alien){
+		//change the alien state and update the object
+		alien.state = alien.EXPLODED;
+		alien.update();
+
+		//remove the alien after one second
+		setTimeout(removeAlien,1000);
+		//remove alien function
+		function removeAlien(){
+			removeObject(alien,aliens);
+			removeObject(alien,sprites);
+		}
 	}
 
 

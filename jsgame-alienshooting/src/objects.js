@@ -12,9 +12,15 @@ var spriteObject = {
 	centerX: function(){
 		return Math.floor(this.x+this.width/2);
 	},
+	centerY: function(){
+		return Math.floor(this.y+this.height/2);
+	},
 
 	halfWidth :function(){
 		return Math.floor(this.width/2);
+	},
+	halfHeight :function(){
+		return Math.floor(this.height/2);
 	}
 };
 
