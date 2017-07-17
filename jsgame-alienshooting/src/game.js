@@ -7,10 +7,10 @@
 	var drawingSurface = canvas.getContext('2d');
 
 	//create game object arrays
-	var sprites=[],missiles=[],aliens=[],assetsToLoad=[],assetsLoaded=0;
+	var sprites=[],missiles=[],aliens=[],assetsToLoad=[],messages=[],assetsLoaded=0;
 	var gameLoading=0,gamePlaying=1,gameOver=2,gameState = gameLoading;
 	var alienFrequency=100,alienTimer=0;
-	var score=0,scoreNeededToWin=60;
+	var score=0,scoreNeededToWin=6; //scoreNeedToWin can set to 60
 	
 	//create background object
 	var background = Object.create(spriteObject);
@@ -31,6 +31,24 @@
 	
 
 	sprites.push(cannon);
+
+	//Game message object
+	var scoreDisplay = Object.create(messageObject);
+	scoreDisplay.text='0';
+	scoreDisplay.font='normal bold 30px emulogic';
+	scoreDisplay.fillStyle='#00ff00';
+	scoreDisplay.x=400;
+	scoreDisplay.y=10;
+	messages.push(scoreDisplay);
+
+	var gameOverMessage = Object.create(messageObject);
+	gameOverMessage.font='normal bold 20px emulogic';
+	gameOverMessage.fillStyle='#00ff00';
+	gameOverMessage.x=70;
+	gameOverMessage.y=120;
+	gameOverMessage.visible=false;
+	messages.push(gameOverMessage);
+	
 
 	//create image assets
 	var image = new Image();
@@ -89,6 +107,21 @@
 					Math.floor(sprite.x),Math.floor(sprite.y),
 					sprite.width,sprite.height
 					);
+			}
+		}
+
+		//Display game messages
+		if(messages.length){
+			for(var i=0;i<messages.length;i++){
+				var message = messages[i];
+
+				if(message.visible){
+					console.log('message:',message.text);
+					drawingSurface.font=message.font;
+					drawingSurface.fillStyle=message.fillStyle;
+					drawingSurface.textBaseline = message.textBaseline;
+					drawingSurface.fillText(message.text,message.x,message.y);
+				}
 			}
 		}
 
@@ -224,10 +257,16 @@
 					//missile hit alien and destory it
 					destoryAlien(alien);
 					score++;
+					scoreDisplay.text=score;
 
 					//remove missile
 					removeObject(missile,missiles);
 					removeObject(missile,sprites);
+
+					if(score===scoreNeededToWin){
+						gameState = gameOver;
+					}
+
 
 					//Subtract 1 from the loop counter to compensate for the removed missile
 					j--;			}
@@ -239,6 +278,15 @@
 
 	function endGame(){
 		console.log('game over');
+
+		gameOverMessage.visible=true;
+
+		if(score<scoreNeededToWin){
+			gameOverMessage.text='EARTH DESTROYED!';
+		}else{
+			gameOverMessage.x=120;
+			gameOverMessage.text='EARTH SAVED!';
+		}
 	}
 
 	function fireMissile(){
