@@ -56,6 +56,23 @@
 	image.src='../images/alienArmada.png';
 	assetsToLoad.push(image);
 
+	//create sound assets
+	var music = document.querySelector('#music');
+	music.addEventListener('canplaythrough',loadHandler,false);
+	music.load();
+	assetsToLoad.push(music);
+
+	
+	var shootSound =document.querySelector('#shootSound');
+	shootSound.addEventListener('canplaythrough',loadHandler,false);
+	shootSound.load();
+	assetsToLoad.push(shootSound);
+
+	var explosionSound = document.querySelector('#explosionSound');
+	explosionSound.addEventListener('canplaythrough',loadHandler,false);
+	explosionSound.load();
+	assetsToLoad.push(explosionSound);
+
 	function loadHandler(){
 		assetsLoaded++;
 		if(assetsLoaded == assetsToLoad.length){
@@ -64,7 +81,16 @@
 			//start the game
 
 			image.removeEventListener('load',loadHandler,false);
+
+			//remove sounds event listener
+			music.removeEventListener('canplaythrough',loadHandler,false);
+			shootSound.removeEventListener('canplaythrough',loadHandler,false);
+			explosionSound.removeEventListener('canplaythrough',loadHandler,false);
+			
+			music.play();
+			music.volume=0.3;
 			gameState = gamePlaying;
+
 		}
 	}//end of image loadhandler function
 
@@ -309,6 +335,8 @@
 		sprites.push(missile);
 		missiles.push(missile);
 
+		shootSound.currentTime=0;
+		shootSound.play();
 
 	}
 
@@ -348,6 +376,9 @@
 	//destory alien function
 	function destoryAlien(alien){
 		//change the alien state and update the object
+
+
+
 		alien.state = alien.EXPLODED;
 		alien.update();
 
@@ -358,6 +389,9 @@
 			removeObject(alien,aliens);
 			removeObject(alien,sprites);
 		}
+
+		explosionSound.currentTime=0;
+		explosionSound.play();
 	}
 
 
