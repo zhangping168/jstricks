@@ -1,7 +1,6 @@
 //--- The sprite object
 
-var spriteObject =
-{
+var spriteObject = {
   sourceX: 0,
   sourceY: 0,
   sourceWidth: 64,
@@ -13,30 +12,25 @@ var spriteObject =
   vx: 0,
   vy: 0,
   visible: true,
-  
+
   //Getters
-  centerX: function()
-  {
+  centerX: function() {
     return this.x + (this.width / 2);
   },
-  centerY: function()
-  {
+  centerY: function() {
     return this.y + (this.height / 2);
   },
-  halfWidth: function()
-  {
+  halfWidth: function() {
     return this.width / 2;
   },
-  halfHeight: function()
-  {
+  halfHeight: function() {
     return this.height / 2;
   },
 };
 
 //--- The message object
 
-var messageObject =
-{
+var messageObject = {
   x: 0,
   y: 0,
   visible: true,
@@ -48,3 +42,22 @@ var messageObject =
 
 //--- The gameTimer object
 
+var gameTimer = {
+  time: 0,
+  interval: undefined,
+  start: function() {
+    var self = this;
+    this.interval = setInterval(function() {
+      self.tick();
+    }, 1000);
+  },
+  tick() {
+    this.time--;
+  },
+  stop: function() {
+    clearInterval(this.interval);
+  },
+  reset: function() {
+    this.time = 0;
+  }
+};

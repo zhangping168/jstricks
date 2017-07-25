@@ -61,7 +61,8 @@
 	var timeDisplay = null,
 		gameOverDisplay = null,
 		gameOverMessage = null,
-		timerMessage = null;
+		timerMessage = null,
+		bombsDefused = 0;
 
 	//keyboard movement
 	var arrowLeft = 37,
@@ -73,43 +74,43 @@
 		moveUp = false,
 		moveDown = false;
 
-	window.addEventListener('keydown',keydownHandler,false);
-	window.addEventListener('keyup',keyupHandler,false);
+	window.addEventListener('keydown', keydownHandler, false);
+	window.addEventListener('keyup', keyupHandler, false);
 
-	function keydownHandler(event){
-		switch(event.keyCode){
+	function keydownHandler(event) {
+		switch (event.keyCode) {
 			case arrowLeft:
-				moveLeft=true;
+				moveLeft = true;
 				break;
 			case arrowRight:
-				moveRight=true;
+				moveRight = true;
 				break;
 			case arrowUp:
-				moveUp=true;
+				moveUp = true;
 				break;
 			case arrowDown:
-				moveDown=true;
+				moveDown = true;
 				break;
 		}
 
-	}//end of keydownHandler function
+	} //end of keydownHandler function
 
-	function keyupHandler(event){
-		switch(event.keyCode){
+	function keyupHandler(event) {
+		switch (event.keyCode) {
 			case arrowLeft:
-				moveLeft=false;
+				moveLeft = false;
 				break;
 			case arrowRight:
-				moveRight=false;
+				moveRight = false;
 				break;
 			case arrowUp:
-				moveUp=false;
+				moveUp = false;
 				break;
 			case arrowDown:
-				moveDown=false;
+				moveDown = false;
 				break;
 		}
-	}//end of keyupHandler function
+	} //end of keyupHandler function
 
 	//load tilesheet image
 	var image = new Image();
@@ -138,6 +139,10 @@
 	} //end of loadHandler function
 
 	update();
+
+	//start the timer
+	gameTimer.time = 20;
+	gameTimer.start();
 
 	function update() {
 		window.requestAnimationFrame(update, canvas);
@@ -180,7 +185,25 @@
 				}
 
 			} //end of for loop
+		} //end of sprites array loop
+
+		if (messages.length) {
+			for (var i = 0; i < messages.length; i++) {
+				var message = messages[i];
+
+				if (message.visible) {
+					drawingSurface.font = message.font;
+					drawingSurface.fillStyle = message.fillStyle;
+					drawingSurface.textBaseline = message.textBaseline;
+					drawingSurface.fillText(
+						message.text,
+						message.x,
+						message.y
+					);
+				}
+			}
 		}
+
 
 	} //end of render function
 
@@ -296,58 +319,93 @@
 
 	function playGame() {
 		//move alien sprite object
-		if(moveLeft&&!moveRight){
-			alien.vx=-4;
+		if (moveLeft && !moveRight) {
+			alien.vx = -4;
 		}
 
-		if(moveRight&&!moveLeft){
-			alien.vx=4;
+		if (moveRight && !moveLeft) {
+			alien.vx = 4;
 		}
 
-		if(moveUp&&!moveDown){
-			alien.vy=-4;
+		if (moveUp && !moveDown) {
+			alien.vy = -4;
 		}
 
-		if(moveDown&&!moveUp){
-			alien.vy=4;
+		if (moveDown && !moveUp) {
+			alien.vy = 4;
 		}
 
-		if(!moveLeft&&!moveRight){
-			alien.vx=0;
+		if (!moveLeft && !moveRight) {
+			alien.vx = 0;
 		}
 
-		if(!moveUp&&!moveDown){
-			alien.vy=0;
+		if (!moveUp && !moveDown) {
+			alien.vy = 0;
 		}
 
-		alien.x+=alien.vx;
-		alien.y+=alien.vy;
+		alien.x += alien.vx;
+		alien.y += alien.vy;
 
 		//check collsion alien with boxes object
-		for(var i=0;i<boxes.length;i++){
-			blockRectangle(alien,boxes[i]);
+		for (var i = 0; i < boxes.length; i++) {
+			blockRectangle(alien, boxes[i]);
 		}
 
 		//check boundaries
-		if(alien.x<64){
-			alien.x=64;
+		if (alien.x < 64) {
+			alien.x = 64;
 		}
 
-		if(alien.x+alien.width>canvas.width-64){
-			alien.x=canvas.width-alien.width-64;
+		if (alien.x + alien.width > canvas.width - 64) {
+			alien.x = canvas.width - alien.width - 64;
 		}
 
-		if(alien.y<64){
-			alien.y=64;
+		if (alien.y < 64) {
+			alien.y = 64;
 		}
 
-		if(alien.y+alien.height>canvas.height-64){
-			alien.y=canvas.height-alien.height-64;
+		if (alien.y + alien.height > canvas.height - 64) {
+			alien.y = canvas.height - alien.height - 64;
 		}
+
+		//Defused the bombs
+
+		for (var i = 0; i < bombs.length; i++) {
+			var bomb = bombs[i];
+			if (hitTestCircle(alien, bomb) && bomb.visible) {
+				bomb.visible = false;
+				bombsDefused++;
+				console.log('bombsDefused: ', bombsDefused);
+				if (bombsDefused == bombs.length) {
+					gameState = OVER;
+				}
+			}
+		} //end of for loop
+
+		//show timer message 
+		timerMessage.text = gameTimer.time;
+		if (gameTimer.time < 10) {
+			timerMessage.text = '0' + gameTimer.time;
+		}
+
+		if (gameTimer.time === 0) {
+			
+			gameState = OVER;
+		}
+
 
 	} //end of playGame function
 
 	function endGame() {
+		gameTimer.stop();
+		gameOverDisplay.visible=true;
+		gameOverMessage.visible=true;
+
+		if(bombsDefused === bombs.length){
+			gameOverMessage.text='You Won!';
+		}else{
+			gameOverMessage.text='You Lost!';
+		}
 
 	} //end of endGame function
 
