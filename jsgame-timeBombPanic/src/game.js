@@ -1,32 +1,81 @@
 (function() {
 
-	//the game map
-	//The game map
+	//The game map,updated map and gameObjects
 	var map =
 		[
-			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
-			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-			[3, 1, 2, 2, 2, 1, 2, 1, 2, 1, 3],
-			[3, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3],
-			[3, 1, 1, 1, 1, 2, 1, 1, 2, 1, 3],
-			[3, 1, 2, 1, 2, 2, 1, 2, 2, 1, 3],
-			[3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3],
-			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3],
+			[3, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3],
+			[3, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 2, 2, 2, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 2, 2, 1, 1, 1, 3],
+			[3, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 3],
+			[3, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 3],
+			[3, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 1, 3],
+			[3, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 3],
+			[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
 		];
 
 	//The game objects map
 	var gameObjects =
 		[
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0],
-			[0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0],
-			[0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0],
-			[0, 0, 0, 0, 5, 0, 0, 5, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0],
+			[0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		];
 
+	//game world object
+	var gameWorld = {
+		x: 0,
+		y: 0,
+		width: map[0] * SIZE,
+		height: map.length * SIZE
+	};
+
+	//create canvas drawing surface
+	var canvas = document.querySelector('canvas');
+	var drawingSurface = canvas.getContext('2d');
+
+	//camera object
+	var camera = {
+		x: 0,
+		y: 0,
+		width: canvas.width,
+		height: canvas.height,
+		rightInnerBoundary: function() {
+			return this.x + (this.width / 2) + (this.width / 4);
+		},
+		leftInnerBoundary: function() {
+			return this.x + (this.width / 2) - (this.width / 4);
+		},
+		topInnerBoundary: function() {
+			return this.y + (this.height / 2) - (this.height / 4);
+		},
+		bottomInnerBoundary: function() {
+			return this.y + (this.height / 2) + (this.height / 4);
+		}
+	};
+
+	camera.x = (gameWorld.x + gameWorld.width / 2) - camera.width / 2;
+	camera.y = (gameWorld.y + gameWorld.height / 2) - camera.height / 2;
 	//map code
 	var EMPTY = 0,
 		FLOOR = 1,
@@ -118,10 +167,6 @@
 	image.src = '../images/timeBombPanic.png';
 	assetsToLoad.push(image);
 
-	//create canvas drawing surface
-	var canvas = document.querySelector('canvas');
-	var drawingSurface = canvas.getContext('2d');
-
 
 	function loadHandler() {
 		assetLoadedCount++;
@@ -173,10 +218,15 @@
 		//clear canvas before drawing anything
 		drawingSurface.clearRect(0, 0, canvas.width, canvas.height);
 
+		//Position the gameworld relative to the camera
+		drawingSurface.save();
+		drawingSurface.translate(-camera.x, -camera.y);
+
 		if (sprites.length) {
 			for (var i = 0; i < sprites.length; i++) {
 				var sprite = sprites[i];
-				if (sprite.visible) {
+				//display the scrollable sprites
+				if (sprite.visible && sprite.scrollable) {
 
 					drawingSurface.drawImage(image,
 						sprite.sourceX, sprite.sourceY, sprite.sourceWidth, sprite.sourceHeight,
@@ -184,9 +234,20 @@
 					);
 				}
 
+				//display the non scrollable sprites
+				if (sprite.visible && !sprite.scrollable) {
+
+					drawingSurface.drawImage(image,
+						sprite.sourceX, sprite.sourceY, sprite.sourceWidth, sprite.sourceHeight,
+						Math.floor(camera.x + sprite.x), Math.floor(camera.y + sprite.y), sprite.width, sprite.height
+					);
+				}
+
 			} //end of for loop
 		} //end of sprites array loop
 
+		drawingSurface.restore();
+		
 		if (messages.length) {
 			for (var i = 0; i < messages.length; i++) {
 				var message = messages[i];
@@ -281,6 +342,7 @@
 		timeDisplay.height = 48;
 		timeDisplay.x = canvas.width / 2 - timeDisplay.width / 2;
 		timeDisplay.y = 8;
+		timeDisplay.scrollable = false;
 		sprites.push(timeDisplay);
 
 		gameOverDisplay = Object.create(spriteObject);
@@ -294,6 +356,7 @@
 		gameOverDisplay.x = canvas.width / 2 - gameOverDisplay.width / 2;
 		gameOverDisplay.y = canvas.height / 2 - gameOverDisplay.height / 2;
 		gameOverDisplay.visible = false;
+		gameOverDisplay.scrollable = false;
 		sprites.push(gameOverDisplay);
 
 		gameOverMessage = Object.create(messageObject);
@@ -352,6 +415,7 @@
 		}
 
 		//check boundaries
+		/*
 		if (alien.x < 64) {
 			alien.x = 64;
 		}
@@ -366,6 +430,40 @@
 
 		if (alien.y + alien.height > canvas.height - 64) {
 			alien.y = canvas.height - alien.height - 64;
+		}
+		*/
+		alien.x = Math.max(64, Math.min(alien.x + alien.vx, gameWorld.width - alien.width - 64));
+		alien.x = Math.max(64, Math.min(alien.y + alien.vy, gameWorld.height - alien.height - 64));
+
+		//scroll the camera,keep camera center over the screen
+		if (alien.x < camera.leftInnerBoundary()) {
+			//camera scroll to left
+			camera.x = Math.floor(alien.x - (camera.width / 4));
+		}
+		if (alien.y < camera.topInnerBoundary()) {
+			//camera scroll to up
+			camera.y = Math.floor(alien.y - (camera.wdith / 4));
+		}
+		if (alien.x + alien.width > camera.rightInnerBoundary()) {
+			//camera scroll to right
+			camera.x = Math.floor(alien.x + alien.width - (camera.width / 4 * 3));
+		}
+		if (alien.y + alien.height > camera.bottomInnerBoundary()) {
+			camera.y = Math.floor(alien.y + alien + height - (camera.height / 4 * 3));
+		}
+
+		//the camera's gameWorld boundaries
+		if (camera.x < gameWorld.x) {
+			camera.x = gameWorld.x;
+		}
+		if (camera.y < gameWorld.y) {
+			camera.y = gameWorld.y;
+		}
+		if (camera.x + camera.width > gameWorld.x + gameWorld.width) {
+			camera.x = gameWorld.x + gameWorld.width - camera.width;
+		}
+		if (camera.y + camera.height > gameWorld.height) {
+			camera.y = gameWorld.height - camera.height;
 		}
 
 		//Defused the bombs
@@ -389,7 +487,7 @@
 		}
 
 		if (gameTimer.time === 0) {
-			
+
 			gameState = OVER;
 		}
 
@@ -398,13 +496,13 @@
 
 	function endGame() {
 		gameTimer.stop();
-		gameOverDisplay.visible=true;
-		gameOverMessage.visible=true;
+		gameOverDisplay.visible = true;
+		gameOverMessage.visible = true;
 
-		if(bombsDefused === bombs.length){
-			gameOverMessage.text='You Won!';
-		}else{
-			gameOverMessage.text='You Lost!';
+		if (bombsDefused === bombs.length) {
+			gameOverMessage.text = 'You Won!';
+		} else {
+			gameOverMessage.text = 'You Lost!';
 		}
 
 	} //end of endGame function
